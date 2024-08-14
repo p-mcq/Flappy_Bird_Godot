@@ -1,0 +1,56 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2hhv22avipke"]
+
+[ext_resource type="PackedScene" uid="uid://c48f6h1p748y5" path="res://Scenes/parallax_background.tscn" id="1_62des"]
+[ext_resource type="Script" path="res://Scripts/SpashScreenController.gd" id="1_72rku"]
+[ext_resource type="FontFile" uid="uid://b62yqaw6nif56" path="res://Assets/Fonts/PixelifySans-VariableFont_wght.ttf" id="2_h0v0p"]
+
+[node name="SplashScreen" type="Node2D"]
+script = ExtResource("1_72rku")
+
+[node name="ParallaxBackground" parent="." instance=ExtResource("1_62des")]
+offset = Vector2(0, -19.495)
+scale = Vector2(2.855, 2.855)
+transform = Transform2D(2.855, 0, 0, 2.855, 0, -19.495)
+scrollingSpeed = 30.0
+
+[node name="Buttons" type="Node2D" parent="."]
+position = Vector2(609, 270)
+
+[node name="StartGameButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+offset_left = -213.0
+offset_top = -136.0
+offset_right = -133.0
+offset_bottom = -112.0
+scale = Vector2(4, 4)
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("2_h0v0p")
+theme_override_font_sizes/font_size = 12
+action_mode = 0
+text = "Start Game"
+
+[node name="HelpButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+offset_left = -213.0
+offset_right = -133.0
+offset_bottom = 24.0
+scale = Vector2(4, 4)
+theme_override_fonts/font = ExtResource("2_h0v0p")
+theme_override_font_sizes/font_size = 12
+action_mode = 0
+text = "Help
+"
+
+[node name="QuitButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+offset_left = -213.0
+offset_top = 136.0
+offset_right = -133.0
+offset_bottom = 160.0
+scale = Vector2(4, 4)
+theme_override_fonts/font = ExtResource("2_h0v0p")
+theme_override_font_sizes/font_size = 12
+action_mode = 0
+text = "Quit Game"
+
+[connection signal="pressed" from="Buttons/StartGameButton" to="." method="_on_start_game_button_pressed"]

@@ -1,0 +1,118 @@
+[gd_scene load_steps=9 format=3 uid="uid://7uu4o7ttqhb2"]
+
+[ext_resource type="PackedScene" uid="uid://c48f6h1p748y5" path="res://Scenes/parallax_background.tscn" id="1_niu8g"]
+[ext_resource type="PackedScene" uid="uid://cfnj3h63ryl7o" path="res://Scenes/flappyBird.tscn" id="1_po7oi"]
+[ext_resource type="Script" path="res://Scripts/PipeMovementAndReset.gd" id="2_2kboi"]
+[ext_resource type="PackedScene" uid="uid://d046iywca121l" path="res://Scenes/pipe.tscn" id="2_8tjf3"]
+[ext_resource type="Script" path="res://Scripts/GameController.gd" id="4_f2201"]
+[ext_resource type="FontFile" uid="uid://b62yqaw6nif56" path="res://Assets/Fonts/PixelifySans-VariableFont_wght.ttf" id="7_fmn5f"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_c6bwq"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_s7lly"]
+
+[node name="Game" type="Node2D"]
+position = Vector2(198, 120)
+
+[node name="ParallaxBackground" parent="." instance=ExtResource("1_niu8g")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-2, -1)
+scale = Vector2(1, 1.01921)
+zoom = Vector2(3, 3)
+position_smoothing_enabled = true
+
+[node name="Flappy" parent="." instance=ExtResource("1_po7oi")]
+position = Vector2(-149, -37)
+collision_layer = 3
+collision_mask = 3
+JUMP_VELOCITY = -300
+
+[node name="TopScreenCollider" type="StaticBody2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TopScreenCollider"]
+position = Vector2(0, -110)
+rotation = 3.14159
+shape = SubResource("WorldBoundaryShape2D_c6bwq")
+
+[node name="BottomScreenCollider" type="StaticBody2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BottomScreenCollider"]
+position = Vector2(0, 109)
+shape = SubResource("WorldBoundaryShape2D_c6bwq")
+
+[node name="Pipes" type="Node2D" parent="."]
+
+[node name="ResetPipeCollider" type="Area2D" parent="Pipes"]
+position = Vector2(-244, 0)
+rotation = 1.5708
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/ResetPipeCollider"]
+position = Vector2(-3.61999e-06, -1)
+shape = SubResource("WorldBoundaryShape2D_s7lly")
+
+[node name="ResetPosition" type="Node2D" parent="Pipes"]
+position = Vector2(215, 0)
+
+[node name="PipeParent" type="Node2D" parent="Pipes"]
+position = Vector2(215, 0)
+script = ExtResource("2_2kboi")
+
+[node name="TopPipe" parent="Pipes/PipeParent" node_paths=PackedStringArray("pipeParent") instance=ExtResource("2_8tjf3")]
+position = Vector2(0, -120)
+rotation = 3.14159
+scale = Vector2(0.6, 0.5)
+collision_layer = 5
+collision_mask = 5
+pipeParent = NodePath("..")
+
+[node name="BottomPipe" parent="Pipes/PipeParent" node_paths=PackedStringArray("pipeParent") instance=ExtResource("2_8tjf3")]
+position = Vector2(0, 120)
+scale = Vector2(0.6, 0.5)
+pipeParent = NodePath("..")
+
+[node name="GameController" type="Node2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_f2201")
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="UI"]
+unique_name_in_owner = true
+offset_left = -188.0
+offset_top = -105.0
+offset_right = -96.0
+offset_bottom = -75.0
+theme_override_fonts/font = ExtResource("7_fmn5f")
+theme_override_font_sizes/font_size = 24
+text = "Score: 0"
+
+[node name="GameStartLabel" type="Label" parent="UI"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+offset_left = -188.0
+offset_top = -105.0
+offset_right = 188.0
+offset_bottom = 109.0
+theme_override_font_sizes/font_size = 32
+text = "Press To Start Game"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReturnToMenuButton" type="Button" parent="UI"]
+unique_name_in_owner = true
+offset_left = -73.0
+offset_top = 40.0
+offset_right = 81.0
+offset_bottom = 71.0
+text = "Return To Menu"
+
+[connection signal="area_shape_entered" from="Pipes/ResetPipeCollider" to="Pipes/PipeParent" method="_on_reset_pipe_collider_area_shape_entered"]
+[connection signal="body_entered" from="Pipes/PipeParent/TopPipe" to="GameController" method="_on_top_pipe_body_entered"]
+[connection signal="body_entered" from="Pipes/PipeParent/BottomPipe" to="GameController" method="_on_bottom_pipe_body_entered"]
+[connection signal="focus_entered" from="UI/ReturnToMenuButton" to="GameController" method="_on_return_to_menu_button_focus_entered"]
+[connection signal="focus_exited" from="UI/ReturnToMenuButton" to="GameController" method="_on_return_to_menu_button_focus_exited"]
+[connection signal="pressed" from="UI/ReturnToMenuButton" to="GameController" method="_on_return_to_menu_button_pressed"]

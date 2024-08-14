@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://cfnj3h63ryl7o"]
+
+[ext_resource type="Texture2D" uid="uid://3rcmrt1yq4xe" path="res://Assets/bluebird-downflap.png" id="1_hfkdi"]
+[ext_resource type="Script" path="res://Scripts/flappyBirdMovement.gd" id="1_tejwq"]
+[ext_resource type="Texture2D" uid="uid://553ewjcrxivg" path="res://Assets/bluebird-midflap.png" id="2_ajebm"]
+[ext_resource type="Texture2D" uid="uid://w6316mi5fxvw" path="res://Assets/bluebird-upflap.png" id="3_yd1kw"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8vodv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_hfkdi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ajebm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_yd1kw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ajebm")
+}],
+"loop": true,
+"name": &"Moving",
+"speed": 6.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3w5jd"]
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_tejwq")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -3)
+sprite_frames = SubResource("SpriteFrames_8vodv")
+animation = &"Moving"
+autoplay = "Moving"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+scale = Vector2(-1.68433, -1.40433)
+shape = SubResource("CircleShape2D_3w5jd")

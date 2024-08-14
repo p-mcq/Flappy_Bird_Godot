@@ -1,0 +1,67 @@
+[gd_scene load_steps=6 format=3 uid="uid://7uu4o7ttqhb2"]
+
+[ext_resource type="PackedScene" uid="uid://cfnj3h63ryl7o" path="res://Scenes/flappyBird.tscn" id="1_po7oi"]
+[ext_resource type="Script" path="res://Scripts/PipeMovementAndReset.gd" id="2_2kboi"]
+[ext_resource type="PackedScene" uid="uid://d046iywca121l" path="res://Scenes/pipe.tscn" id="2_8tjf3"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_c6bwq"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_s7lly"]
+
+[node name="Game" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-2, -1)
+scale = Vector2(1, 1.01921)
+zoom = Vector2(3, 3)
+
+[node name="Flappy" parent="." instance=ExtResource("1_po7oi")]
+position = Vector2(-149, -70)
+collision_layer = 3
+collision_mask = 3
+JUMP_VELOCITY = -300
+
+[node name="BottomCollider" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BottomCollider"]
+position = Vector2(-2, 109)
+shape = SubResource("WorldBoundaryShape2D_c6bwq")
+
+[node name="TopCollider2" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TopCollider2"]
+position = Vector2(0, -110)
+rotation = 3.14159
+shape = SubResource("WorldBoundaryShape2D_c6bwq")
+
+[node name="Pipes" type="Node2D" parent="."]
+
+[node name="ResetPipeCollider" type="Area2D" parent="Pipes"]
+position = Vector2(-244, 0)
+rotation = 1.5708
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/ResetPipeCollider"]
+position = Vector2(-3.61999e-06, -1)
+shape = SubResource("WorldBoundaryShape2D_s7lly")
+
+[node name="ResetPosition" type="Node2D" parent="Pipes"]
+position = Vector2(275, 0)
+
+[node name="PipeParent" type="Node2D" parent="Pipes"]
+position = Vector2(275, 0)
+script = ExtResource("2_2kboi")
+
+[node name="TopPipe" parent="Pipes/PipeParent" node_paths=PackedStringArray("pipeParent") instance=ExtResource("2_8tjf3")]
+position = Vector2(0, -120)
+rotation = 3.14159
+scale = Vector2(0.6, 0.5)
+pipeParent = NodePath("..")
+
+[node name="BottomPipe" parent="Pipes/PipeParent" node_paths=PackedStringArray("pipeParent") instance=ExtResource("2_8tjf3")]
+position = Vector2(0, 120)
+scale = Vector2(0.6, 0.5)
+pipeParent = NodePath("..")
+
+[connection signal="area_shape_entered" from="Pipes/ResetPipeCollider" to="Pipes/PipeParent" method="_on_reset_pipe_collider_area_shape_entered"]

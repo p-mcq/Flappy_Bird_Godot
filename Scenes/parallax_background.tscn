@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://c48f6h1p748y5"]
+
+[ext_resource type="Script" path="res://Scripts/ScrollingBackground.gd" id="1_ka3bu"]
+[ext_resource type="Texture2D" uid="uid://nrojht6tp83y" path="res://Assets/background-day.png" id="2_kawrd"]
+
+[node name="ParallaxBackground" type="ParallaxBackground"]
+process_priority = 1
+editor_description = "For the scrolling to work, you need to offset the scroll_base_offset since the camera isn't moving I believe. Otherwise offset the normal scroll_offset"
+follow_viewport_scale = 0.0
+script = ExtResource("1_ka3bu")
+scrollingSpeed = 250.0
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+motion_mirroring = Vector2(407, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxLayer"]
+position = Vector2(198, 119)
+scale = Vector2(1.41495, 0.44572)
+texture = ExtResource("2_kawrd")
